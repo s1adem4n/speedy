@@ -2,7 +2,7 @@
 
 cd frontend || exit
 
-bun installl
+bun install
 bun run build
 
 cd ..
