@@ -6,6 +6,7 @@
   let downloadSpeed = 0;
   let uploadSpeed = 0;
   let ping = 0;
+  let pingTries = 25;
   let downloadSize = 100;
   let downloadChunks = 10;
   let uploadSize = 100;
@@ -84,18 +85,22 @@
 
   const testPing = async (tries: number) => {
     const pings: number[] = [];
+    const observer = new PerformanceObserver((list) => {
+      const entries = list.getEntries();
+      const lastEntry = entries[entries.length - 1];
+      pings.push(lastEntry.duration);
+
+      pings.sort((a, b) => a - b);
+      const medianPing = pings[Math.floor(pings.length / 2)];
+      ping = medianPing;
+    });
+    observer.observe({ type: "resource", buffered: true });
 
     for (let i = 0; i < tries; i++) {
-      const start = performance.now();
       await fetch(`${API_URL}/ping`);
-      const now = performance.now();
-      const duration = now - start;
-      pings.push(duration);
     }
 
-    pings.sort((a, b) => a - b);
-    const medianPing = pings[Math.floor(pings.length / 2)];
-    ping = medianPing;
+    observer.disconnect();
   };
 </script>
 
@@ -118,5 +123,6 @@
 <input type="number" placeholder="Chunks" bind:value={uploadChunks} />
 <p>Upload Speed: {bytesToHumanReadable(uploadSpeed)}/s</p>
 
-<button on:click={() => testPing(25)}>Test Ping</button>
+<button on:click={() => testPing(pingTries)}>Test Ping</button>
+<input type="number" placeholder="Tries" bind:value={pingTries} />
 <p>Ping: {ping.toFixed(2)}ms</p>
