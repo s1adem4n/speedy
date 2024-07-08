@@ -85,22 +85,18 @@
 
   const testPing = async (tries: number) => {
     const pings: number[] = [];
-    const observer = new PerformanceObserver((list) => {
-      const entries = list.getEntries();
-      const lastEntry = entries[entries.length - 1];
-      pings.push(lastEntry.duration);
+
+    for (let i = 0; i < tries; i++) {
+      const response = await fetch(`${API_URL}/ping`);
+      const serverTime = parseInt(await response.text());
+      // get unixmilliseconds
+      const now = new Date().getTime();
+      pings.push(now - serverTime);
 
       pings.sort((a, b) => a - b);
       const medianPing = pings[Math.floor(pings.length / 2)];
       ping = medianPing;
-    });
-    observer.observe({ type: "resource", buffered: true });
-
-    for (let i = 0; i < tries; i++) {
-      await fetch(`${API_URL}/ping`);
     }
-
-    observer.disconnect();
   };
 </script>
 

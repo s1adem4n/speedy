@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"speedy/frontend"
 	"strconv"
+	"time"
 )
 
 // backend for simple speedtest (up/down) and ping
@@ -62,6 +63,9 @@ func main() {
 
 	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
+		unixMillis := time.Now().UnixMilli()
+
+		w.Write([]byte(strconv.FormatInt(unixMillis, 10)))
 	})
 
 	http.ListenAndServe(":5689", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
