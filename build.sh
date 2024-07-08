@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd frontend || exit
 
 bun installl
