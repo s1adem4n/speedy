@@ -1,5 +1,7 @@
 <script lang="ts">
-  const API_URL = "http://localhost:8080";
+  const API_URL = import.meta.env.DEV
+    ? "http://localhost:5689"
+    : window.location.origin;
 
   let downloadSpeed = 0;
   let uploadSpeed = 0;
