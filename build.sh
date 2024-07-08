@@ -4,4 +4,4 @@ bun installl
 bun run build
 
 cd ..
-go build -o bin/server main.go
+go build -o build/server main.go
