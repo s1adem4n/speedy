@@ -15,7 +15,7 @@
   let stop = false;
 
   const bytesToHumanReadable = (bytes: number) => {
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
+    const sizes = ["B", "KiB", "MiB", "GiB", "TiB"];
     if (bytes === 0) return "0 B";
     const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))));
     return (bytes / Math.pow(1024, i)).toFixed(2) + " " + sizes[i];
