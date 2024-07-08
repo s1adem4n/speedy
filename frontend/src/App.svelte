@@ -81,6 +81,22 @@
       remainingSize -= chunkSize;
     }
   };
+
+  const testPing = async (tries: number) => {
+    const pings: number[] = [];
+
+    for (let i = 0; i < tries; i++) {
+      const start = performance.now();
+      await fetch(`${API_URL}/ping`);
+      const now = performance.now();
+      const duration = now - start;
+      pings.push(duration);
+    }
+
+    pings.sort((a, b) => a - b);
+    const medianPing = pings[Math.floor(pings.length / 2)];
+    ping = medianPing;
+  };
 </script>
 
 <h1>Speed Test</h1>
@@ -101,3 +117,6 @@
 <input type="number" placeholder="Size in MB" bind:value={uploadSize} />
 <input type="number" placeholder="Chunks" bind:value={uploadChunks} />
 <p>Upload Speed: {bytesToHumanReadable(uploadSpeed)}/s</p>
+
+<button on:click={() => testPing(25)}>Test Ping</button>
+<p>Ping: {ping.toFixed(2)}ms</p>
